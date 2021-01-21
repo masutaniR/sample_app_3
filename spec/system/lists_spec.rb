@@ -4,17 +4,19 @@ require 'rails_helper'
 
 describe '投稿のテスト' do
   let!(:list) { create(:list, title: 'hoge', body: 'body') }
+
   describe 'トップ画面(top_path)へのテスト' do
     before do
-     visit top_path
+      visit top_path
     end
+
     context '表示の確認' do
-     it 'トップ画面(top_path)に「ここはTopページです」が表示されているか' do
-       expect(page).to have_content 'ここはTopページです'
-     end
-     it 'top_pathが"/top"であるか' do
-       expect(current_path).to eq('/top')
-     end
+      it 'トップ画面(top_path)に「ここはTopページです」が表示されているか' do
+        expect(page).to have_content 'ここはTopページです'
+      end
+      it 'top_pathが"/top"であるか' do
+        expect(current_path).to eq('/top')
+      end
     end
   end
 
@@ -22,6 +24,7 @@ describe '投稿のテスト' do
     before do
       visit todolists_new_path
     end
+
     context '表示の確認' do
       it 'todolists_new_pathが"/todolists/new"であるか' do
         expect(current_path).to eq('/todolists/new')
@@ -30,10 +33,11 @@ describe '投稿のテスト' do
         expect(page).to have_button '投稿'
       end
     end
+
     context '投稿処理のテスト' do
       it '投稿後のリダイレクト先は正しいか' do
-        fill_in 'list[title]', with: Faker::Lorem.characters(number:5)
-        fill_in 'list[body]', with: Faker::Lorem.characters(number:20)
+        fill_in 'list[title]', with: Faker::Lorem.characters(number: 5)
+        fill_in 'list[body]', with: Faker::Lorem.characters(number: 20)
         click_button '投稿'
         expect(page).to have_current_path todolist_path(List.last)
       end
@@ -44,6 +48,7 @@ describe '投稿のテスト' do
     before do
       visit todolists_path
     end
+
     context '一覧表示とリンクの確認' do
       it '一覧表示画面に投稿されたものが表示されているか' do
         List.all.each_with_index do |list|
@@ -58,6 +63,7 @@ describe '投稿のテスト' do
     before do
       visit todolist_path(list)
     end
+
     context '表示のテスト' do
       it '削除リンクが存在しているか' do
         expect(page).to have_link '削除'
@@ -66,6 +72,7 @@ describe '投稿のテスト' do
         expect(page).to have_link '編集'
       end
     end
+
     context 'リンクの推移先の確認' do
       it '編集の推移先は編集画面か' do
         edit_link = find_all('a')[0]
@@ -73,9 +80,10 @@ describe '投稿のテスト' do
         expect(current_path).to eq('/todolists/' + list.id.to_s + '/edit')
       end
     end
+
     context 'list削除のテスト' do
       it 'listの削除' do
-        expect{ list.destroy }.to change{ List.count }.by(-1)
+        expect { list.destroy }.to change(List, :count).by(-1)
       end
     end
   end
@@ -84,6 +92,7 @@ describe '投稿のテスト' do
     before do
       visit edit_todolist_path(list)
     end
+
     context '表示の確認' do
       it '編集前のタイトルと本文がフォームに表示（セット）されているか' do
         expect(page).to have_field 'list[title]', with: list.title
@@ -93,10 +102,11 @@ describe '投稿のテスト' do
         expect(page).to have_button '保存'
       end
     end
+
     context '更新処理に関するテスト' do
       it '更新後のリダイレクト先は正しいか' do
-        fill_in 'list[title]', with: Faker::Lorem.characters(number:5)
-        fill_in 'list[body]', with: Faker::Lorem.characters(number:20)
+        fill_in 'list[title]', with: Faker::Lorem.characters(number: 5)
+        fill_in 'list[body]', with: Faker::Lorem.characters(number: 20)
         click_button '保存'
         expect(page).to have_current_path todolist_path(list)
       end
